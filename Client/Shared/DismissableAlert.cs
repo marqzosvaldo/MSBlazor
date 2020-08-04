@@ -10,7 +10,7 @@ namespace MSBlazor.Client.Shared {
             set {
                 if (value != this.show) {
                     this.show = value;
-                    ShowChanged?.Invoke(this.show);
+                    ShowChanged.InvokeAsync(this.show);
                 }
             }
         }
@@ -19,7 +19,7 @@ namespace MSBlazor.Client.Shared {
         public RenderFragment ChildContent { get; set; }
 
         [Parameter]
-        public Action<bool> ShowChanged { get; set; }
+        public EventCallback<bool> ShowChanged { get; set; }
 
         public void Dismiss() => Show = false;
 
