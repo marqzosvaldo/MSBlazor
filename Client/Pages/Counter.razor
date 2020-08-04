@@ -1,19 +1,38 @@
 ﻿@page "/counter"
+@using System.Threading
 
 <h1>Counter</h1>
 
 
+<p>
+    Current count: 
+    <span class="@backgroundColor">@currentCount</span>
+</p>
+<br><br>
+<p>
+    <input type="number"  @bind="@increment"/>
+    <button class="btn btn-primary" disabled="@(currentCount >= 10)"  @onclick="IncrementCount"> Click me </button>
+</p>
+<br><br>
+<button class="btn btn-secondary" @onclick="AutoIncrement">Auto Increment</button>
 
-<div style="width: 400px; height: 400px; background: yellow" @onmousemove="OuterMouseMove">
-    @outerPos
-    <div style="width: 300px; height: 300px; background: green; margin:50px" @onmousemove="InnerMouseMove" @onmousemove:stopPropagation>
-        @innerPos
-    </div>
-</div>
+
+
 @code {
-    private string outerPos = "Nothing yet";
-    private void OuterMouseMove(MouseEventArgs e) => outerPos = $"Mouse last at {e.ClientX}x{e.ClientY}";
-    private string innerPos = "Nothing yet";
-    private void InnerMouseMove(MouseEventArgs e) => innerPos = $"Mouse last at {e.ClientX}x{e.ClientY}";
+    string backgroundColor = "red-background";
+    private int currentCount = 0;
+    private int increment = 1;
+
+    private void IncrementCount() {
+        Console.WriteLine("++");
+        currentCount += increment;
+        backgroundColor = (currentCount % 2 == 0) ?
+            "red-background" : "yellow-background";
+    }
+    private void AutoIncrement() {
+        var timer = new Timer(
+            callback: (_) =>{ IncrementCount();this.StateHasChanged();}, state : null,
+            dueTime : TimeSpan.FromSeconds(1), period : TimeSpan.FromSeconds(1));
+    }
 }
 
