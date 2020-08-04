@@ -30,7 +30,7 @@
             "red-background" : "yellow-background";
     }
     private void AutoIncrement() {
-        var timer = new Timer(
+        var timer = new System.Threading.Timer(
             callback: (_) =>{ IncrementCount();this.StateHasChanged();}, state : null,
             dueTime : TimeSpan.FromSeconds(1), period : TimeSpan.FromSeconds(1));
     }

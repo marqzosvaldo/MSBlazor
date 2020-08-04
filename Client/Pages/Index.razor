@@ -8,8 +8,12 @@
 </Alert>
 
 <button class="btn btn-secondary" @onclick="@ToggleAlert"> Toggle </button>
-
+<DismissableAlert @bind-Show="@ShowAlert" >
+     <span class="oi oi-check mr-2" aria-hidden="true"></span>
+    <strong>Blazor is soo cool!</strong>
+</DismissableAlert>
 <SurveyPrompt Title="How is Blazor working for you?" />
+
 @code{
     public bool ShowAlert { get; set; } = true;
 
