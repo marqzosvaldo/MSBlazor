@@ -2,41 +2,18 @@
 
 <h1>Counter</h1>
 
-<p>Current count:<span class="@backgroundColor"> @currentCount </span></p>
-<button disabled="@(currentCount >= 100)" class="btn btn-primary" @onclick="IncrementCount">Click me</button>
-<p>
-    <input type="number" @bind="@increment" />
-</p>
-<br><br><br>
-<p>
-    <input type="number" @bind="@increment" />
-</p>
 
 
-<input type="number" @bind="@increment" @onkeypress="KeyHandler" @onkeypress:preventDefault="true"/>
+<div style="width: 400px; height: 400px; background: yellow" @onmousemove="OuterMouseMove">
+    @outerPos
+    <div style="width: 300px; height: 300px; background: green; margin:50px" @onmousemove="InnerMouseMove" @onmousemove:stopPropagation>
+        @innerPos
+    </div>
+</div>
 @code {
-    private int currentCount = 0;
-    private int increment=1;
-    string backgroundColor = "red-background";
-
-    @* private void IncrementCount() {
-        currentCount+= increment;
-        backgroundColor = (currentCount % 2 == 0) ? "red-background" : "yellow-background";
-    } *@
-
-    private void IncrementCount(MouseEventArgs e){
-        currentCount+= increment;
-        backgroundColor = (currentCount % 2 == 0) ? "red-background" : "yellow-background";
-    }
-
-    private void KeyHandler(KeyboardEventArgs e){
-        System.Console.WriteLine($"code: {e.Code}");
-        if(e.Key  == "+"){
-            increment+= 1;
-        }
-        if(e.Key == "-"){
-            increment -= 1;
-        }
-    }
+    private string outerPos = "Nothing yet";
+    private void OuterMouseMove(MouseEventArgs e) => outerPos = $"Mouse last at {e.ClientX}x{e.ClientY}";
+    private string innerPos = "Nothing yet";
+    private void InnerMouseMove(MouseEventArgs e) => innerPos = $"Mouse last at {e.ClientX}x{e.ClientY}";
 }
 
