@@ -34,21 +34,23 @@ else
 
 </Grid>
 
+<ListView Items="forecasts">
+    <ItemTemplate>
+        @forecastTemplate(context)
+    </ItemTemplate>
+</ListView>
+
 }
 
 @code {
     private WeatherForecast[] forecasts;
 
-    protected override async Task OnInitializedAsync()
-    {
-        try
-        {
+    RenderFragment<WeatherForecast> forecastTemplate=(forecast)=>@<li>@forecast.Date.ToLongDateString() -  @forecast.Summary</li>;
+    protected override async Task OnInitializedAsync() {
+        try {
             forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast");
-        }
-        catch (AccessTokenNotAvailableException exception)
-        {
+        } catch (AccessTokenNotAvailableException exception) {
             exception.Redirect();
         }
     }
-
 }
