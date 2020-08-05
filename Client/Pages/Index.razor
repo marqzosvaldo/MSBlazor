@@ -14,12 +14,22 @@
 </DismissableAlert>
 <SurveyPrompt Title="How is Blazor working for you?" />
 
+<GrandMother>
+    <GrandChild/>
+    <DismissableAlert Show="true">
+        <GrandChild/>
+    </DismissableAlert>
+
+</GrandMother>
+
 @code{
-    private bool showAlert = true;
+
+    @* private bool showAlert = true; *@
     private DismissableAlert alert;
+    public bool ShowAlert{get;set;}= true;
 
 
-    public bool ShowAlert {
+    @* public bool ShowAlert {
         get => showAlert;
         set {
             if (value != showAlert) {
@@ -27,7 +37,7 @@
                 showAlert = value;
             }
         }
-    }
+    } *@
 
     public void ToggleAlert() => ShowAlert = !ShowAlert;
 }
