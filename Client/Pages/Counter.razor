@@ -1,38 +1,43 @@
 ﻿@page "/counter"
-@using System.Threading
+@page "/counter/{CurrentCount:int}"
+
+
+@inject IJSRuntime JSRuntime
 
 <h1>Counter</h1>
 
-
 <p>
-    Current count: 
-    <span class="@backgroundColor">@currentCount</span>
+  Current count:
+  <span>@CurrentCount</span>
 </p>
-<br><br>
-<p>
-    <input type="number"  @bind="@increment"/>
-    <button class="btn btn-primary" disabled="@(currentCount >= 10)"  @onclick="IncrementCount"> Click me </button>
-</p>
-<br><br>
-<button class="btn btn-secondary" @onclick="AutoIncrement">Auto Increment</button>
+<button class="btn btn-primary" @onclick="IncrementCount">
+  Click me
+</button>
 
 
-
-@code {
-    string backgroundColor = "red-background";
+@code{
     private int currentCount = 0;
-    private int increment = 1;
+    [Parameter]
+    public int CurrentCount {
+        get => currentCount;
+        set {
+            if (currentCount != value) {
+                currentCount = value;
+                JSRuntime.InvokeAsync<string>("blazorLocalStorage.set", nameof(CurrentCount), currentCount);
+            }
+        }
+    }
+    protected override async Task OnInitializedAsync() {
+        try {
+            int? c = await JSRuntime.InvokeAsync<int?>("blazorLocalStorage.get", nameof(CurrentCount));
+            if(c.HasValue){
+                currentCount = c.Value;
+            }
+        } catch (Exception ex) {
 
-    private void IncrementCount() {
-        Console.WriteLine("++");
-        currentCount += increment;
-        backgroundColor = (currentCount % 2 == 0) ?
-            "red-background" : "yellow-background";
+            System.Console.WriteLine(ex.Message);
+        }
     }
-    private void AutoIncrement() {
-        var timer = new System.Threading.Timer(
-            callback: (_) =>{ IncrementCount();this.StateHasChanged();}, state : null,
-            dueTime : TimeSpan.FromSeconds(1), period : TimeSpan.FromSeconds(1));
-    }
+
+    private void IncrementCount() => CurrentCount += 1;
 }
-
