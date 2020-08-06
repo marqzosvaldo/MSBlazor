@@ -31,6 +31,9 @@
     }
     protected override async Task OnInitializedAsync() {
         try {
+            var objRef = DotNetObjectReference.Create(this);
+            await JSRuntime.InvokeVoidAsync("blazorLocalStorage.watch",objRef);
+
             int? c = await JSRuntime.InvokeAsync<int?>("blazorLocalStorage.get", nameof(CurrentCount));
             if (c.HasValue) {
                 currentCount = c.Value;
@@ -46,4 +49,14 @@
     }
 
     private void IncrementCount() => CurrentCount += 1;
+
+    [JSInvokable]
+    public async Task UpdateCounter(){
+        Console.WriteLine("Update");
+        int? c = await JSRuntime.InvokeAsync<int?>("blazorLocalStorage.get",nameof(CurrentCount));
+        if (c.HasValue) {
+            currentCount = c.Value; 
+        }
+        this.StateHasChanged(); 
+    }
 }
