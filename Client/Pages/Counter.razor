@@ -13,10 +13,12 @@
 <button class="btn btn-primary" @onclick="IncrementCount">
   Click me
 </button>
+<input @ref="inputElement" @bind="CurrentCount" />
 
 
 @code{
     private int currentCount = 0;
+    private ElementReference inputElement;
     [Parameter]
     public int CurrentCount {
         get => currentCount;
@@ -30,13 +32,17 @@
     protected override async Task OnInitializedAsync() {
         try {
             int? c = await JSRuntime.InvokeAsync<int?>("blazorLocalStorage.get", nameof(CurrentCount));
-            if(c.HasValue){
+            if (c.HasValue) {
                 currentCount = c.Value;
             }
         } catch (Exception ex) {
 
             System.Console.WriteLine(ex.Message);
         }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender) {
+        await JSRuntime.InvokeVoidAsync("blazorFocus.set", inputElement);
     }
 
     private void IncrementCount() => CurrentCount += 1;
